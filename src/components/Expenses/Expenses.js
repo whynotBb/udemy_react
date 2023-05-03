@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import Card from "../UI/Card";
-import ExpenseItem from "./ExpenseItem";
-import "./Expenses.css";
-import ExpensesFilter from "./ExpensesFilter";
+import React, { useState } from 'react';
+import Card from '../UI/Card';
+import ExpenseItem from './ExpenseItem';
+import './Expenses.css';
+import ExpensesFilter from './ExpensesFilter';
+import ExpensesList from './ExpensesList';
+import ExpensesChart from './ExpensesChart';
 
 const Expenses = (props) => {
-  const [year, setYear] = useState("2020");
+  const [year, setYear] = useState('2020');
   const selectedYearHandler = (selectedYear) => {
     console.log(selectedYear);
     setYear(selectedYear);
@@ -14,23 +16,29 @@ const Expenses = (props) => {
   const filterExpense = props.items.filter((expense) => {
     return expense.date.getFullYear().toString() === year;
   });
+
   return (
-    <div>
-      <Card className="expenses">
+    <li>
+      <Card className='expenses'>
         <ExpensesFilter selected={year} onSelectedYear={selectedYearHandler} />
-        {filterExpense.map((item, index, array) => {
-          return (
-            <ExpenseItem
-              key={item.id}
-              id={item.id}
-              date={item.date}
-              title={item.title}
-              amount={item.amount}
-            />
-          );
-        })}
+        {/* 변수 처리 하기
+        {filterExpense.length === 0 && <p>No expenses found</p>}
+        {filterExpense.length > 0 &&
+          filterExpense.map((item) => {
+            return (
+              <ExpenseItem
+                key={item.id}
+                id={item.id}
+                date={item.date}
+                title={item.title}
+                amount={item.amount}
+              />
+            );
+          })} */}
+        <ExpensesChart expenses={filterExpense} />
+        <ExpensesList items={filterExpense} />
       </Card>
-    </div>
+    </li>
   );
 };
 export default Expenses;

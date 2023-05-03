@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import "./ExpenseFrom.css";
+import React, { useState } from 'react';
+import './ExpenseFrom.css';
 const ExpenseForm = (props) => {
-  const [enteredTitle, setEnteredTitle] = useState("");
-  const [enteredAmount, setEnteredAmount] = useState("");
-  const [enteredDate, setEnteredDate] = useState("");
+  const [isAdd, setIsAdd] = useState(false);
+  const [enteredTitle, setEnteredTitle] = useState('');
+  const [enteredAmount, setEnteredAmount] = useState('');
+  const [enteredDate, setEnteredDate] = useState('');
   // const [userInput, setUserInput] = useState({
   //   enteredTitle: "",
   //   enteredAmount: "",
@@ -41,50 +42,61 @@ const ExpenseForm = (props) => {
     event.preventDefault();
     const expenseData = {
       title: enteredTitle,
-      amount: enteredAmount,
+      amount: +enteredAmount,
       date: new Date(enteredDate),
     };
     console.log(expenseData);
     props.onSaveExpenseData(expenseData);
-    setEnteredTitle("");
-    setEnteredAmount("");
-    setEnteredDate("");
+    setEnteredTitle('');
+    setEnteredAmount('');
+    setEnteredDate('');
+    setIsAdd(true);
   };
+  // const addHandler = (event) => {
+  //   event.preventDefault();
+  //   setIsAdd(true);
+  // };
+  const cancelHandler = (event) => {
+    event.preventDefault();
+    setIsAdd(false);
+  };
+  const controlForm = (
+    <div className='new-expense__controls'>
+      <div className='new-expense__control'>
+        <label>Title</label>
+        <input type='text' value={enteredTitle} onChange={titleChangeHandler} />
+      </div>
+      <div className='new-expense__control'>
+        <label>Amount</label>
+        <input
+          type='number'
+          min='0.01'
+          step='0.01'
+          value={enteredAmount}
+          onChange={amountChangeHandler}
+        />
+      </div>
+      <div className='new-expense__control'>
+        <label>Date</label>
+        <input
+          type='date'
+          min='2019-01-01'
+          max='2023-12-31'
+          value={enteredDate}
+          onChange={dateChangeHandler}
+        />
+      </div>
+    </div>
+  );
+  const cancelButton = <button onClick={cancelHandler}>Cancel</button>;
+
   return (
     //form 에서는 button 에 click 이벤트 대신 form 에 submit 이벤트를 사용
     <form onSubmit={submitHandler}>
-      <div className="new-expense__controls">
-        <div className="new-expense__control">
-          <label>Title</label>
-          <input
-            type="text"
-            value={enteredTitle}
-            onChange={titleChangeHandler}
-          />
-        </div>
-        <div className="new-expense__control">
-          <label>Amount</label>
-          <input
-            type="number"
-            min="0.01"
-            step="0.01"
-            value={enteredAmount}
-            onChange={amountChangeHandler}
-          />
-        </div>
-        <div className="new-expense__control">
-          <label>Date</label>
-          <input
-            type="date"
-            min="2019-01-01"
-            max="2023-12-31"
-            value={enteredDate}
-            onChange={dateChangeHandler}
-          />
-        </div>
-      </div>
-      <div className="new-expense__actions">
-        <button type="submit">Add Expense</button>
+      {isAdd && controlForm}
+      <div className='new-expense__actions'>
+        {isAdd && cancelButton}
+        <button type='submit'>Add Expense</button>
       </div>
     </form>
   );
